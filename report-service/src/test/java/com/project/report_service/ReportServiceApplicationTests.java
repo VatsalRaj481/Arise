@@ -2,12 +2,28 @@ package com.project.report_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
-class ReportServiceApplicationTests {
+/**
+ * Basic test to ensure the ReportServiceApplication context loads successfully.
+ * This verifies that all Spring beans are correctly configured and
+ * the application can start without errors.
+ *
+ * This test uses a random port and does not connect to real external services,
+ * ensuring isolation from the configurations in application.properties.
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test") // Use a test profile to isolate configurations if needed
+public class ReportServiceApplicationTests {
 
+	/**
+	 * This test method simply checks if the Spring application context loads.
+	 * If it loads without throwing an exception, the test passes,
+	 * indicating that the basic setup of the application is correct.
+	 */
 	@Test
 	void contextLoads() {
+		// No explicit assertions needed here.
+		// If the context fails to load, the test runner will report an error.
 	}
-
 }
