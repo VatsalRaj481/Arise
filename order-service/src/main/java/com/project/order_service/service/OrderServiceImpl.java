@@ -269,8 +269,8 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Insufficient stock for product ID: " + order.getProductId());
         }
 
-        // Deduct stock
-        stock.setQuantity(stock.getQuantity() - order.getQuantity());
+        // Increase stock
+        stock.setQuantity(stock.getQuantity() + order.getQuantity());
         stockClient.updateStock(order.getProductId(), stock);
         log.info("Stock updated for product ID {}. New quantity: {}", order.getProductId(), stock.getQuantity());
 
