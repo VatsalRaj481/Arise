@@ -20,7 +20,7 @@
         </processorPath>
         <module name="order-service" />
       </profile>
-      <profile name="Annotation profile for Authentication-Service" enabled="true">
+      <profile name="Annotation profile for report-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
