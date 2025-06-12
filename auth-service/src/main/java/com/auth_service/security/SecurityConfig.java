@@ -35,20 +35,6 @@ public class SecurityConfig {
                 .build();
     }
 
-    /*
-     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        return http.csrf(customier->customier.disable()) //disabling csrf
-        .authorizeHttpRequests(request->request
-                .requestMatchers("register","login")
-                .permitAll()
-                .anyRequest().authenticated()) //Enabling authorization
-         .formLogin(Customizer.withDefaults())
-        .httpBasic(Customizer.withDefaults())
-        .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-         .build();
-    }
-     */
-
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
