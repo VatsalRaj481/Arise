@@ -1499,3 +1499,499 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 2025-06-12 10:54:18.828  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
 2025-06-12 10:54:32.312  INFO c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 2025-06-12 11:31:53.820  WARN com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=34m24s696ms797µs100ns).
+2025-06-12 11:33:30.019  INFO c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-06-12 11:34:44.865  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:44.867 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:44.875  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:44.875  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:44.885  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 7
+2025-06-12 11:34:44.888 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:44.892  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:44.892  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:44.931  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:44.933 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:44.939  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:44.940  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:44.947  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 7
+2025-06-12 11:34:44.950 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:44.955  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:44.956  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.456  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 7
+2025-06-12 11:34:49.459 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.465  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.466  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.512  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:49.515 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.520  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.521  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.640  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 7
+2025-06-12 11:34:49.643 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.653  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.654  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.683  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:49.687 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.694  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.695  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.726  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:49.730 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.733  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 7
+2025-06-12 11:34:49.736  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.736  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.738 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.748  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.748  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.829  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 7
+2025-06-12 11:34:49.832  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:49.833 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.836 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.838  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.839  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.842  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.842  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.853  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:49.868 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.868  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 7
+2025-06-12 11:34:49.868  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.868  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.868 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.885  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.885  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.949  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:49.952 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.955  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 7
+2025-06-12 11:34:49.956  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.957  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:49.957 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:49.962  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:49.962  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:54.915  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:54.918 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:54.924  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:54.924  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:54.969  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 7
+2025-06-12 11:34:54.973 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:54.979  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:54.979  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:55.004  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:55.007 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:55.011  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:55.012  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:55.038  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:55.043 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:55.048  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:55.049  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:55.148  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:55.152 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:55.158  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:55.158  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:55.181  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 7
+2025-06-12 11:34:55.184 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:55.190  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:55.191  INFO c.p.s.controller.StockController         : Stock found for productId 7: Stock(productId=7, quantity=50, reorderLevel=10)
+2025-06-12 11:34:55.216  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:55.219 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:55.224  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:55.225  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:55.248  INFO c.p.s.controller.StockController         : Received request to get stock by productId: 5
+2025-06-12 11:34:55.251 DEBUG org.hibernate.SQL                        : 
+    select
+        s1_0.product_id,
+        s1_0.quantity,
+        s1_0.reorder_level 
+    from
+        stock s1_0 
+    where
+        s1_0.product_id=?
+2025-06-12 11:34:55.255  INFO c.p.s.service.StockServiceImpl           : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:34:55.255  INFO c.p.s.controller.StockController         : Stock found for productId 5: Stock(productId=5, quantity=40, reorderLevel=10)
+2025-06-12 11:38:30.023  INFO c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-06-12 11:43:30.029  INFO c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-06-12 11:48:30.032  INFO c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-06-12 11:53:30.043  INFO c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-06-12 11:58:30.119  INFO c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-06-12 12:03:30.121  INFO c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-06-12 12:05:24.946  INFO o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application STOCK-SERVICE with eureka with status DOWN
+2025-06-12 12:05:24.946  INFO com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1749710124946, current=DOWN, previous=UP]
+2025-06-12 12:05:24.947  INFO com.netflix.discovery.DiscoveryClient    : DiscoveryClient_STOCK-SERVICE/LTIN600853.cts.com:stock-service:8090: registering service...
+2025-06-12 12:05:24.957  INFO o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-12 12:05:24.962  INFO com.netflix.discovery.DiscoveryClient    : DiscoveryClient_STOCK-SERVICE/LTIN600853.cts.com:stock-service:8090 - registration status: 204
+2025-06-12 12:05:24.963  INFO o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-06-12 12:05:25.014  INFO j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-12 12:05:25.022  INFO com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-06-12 12:05:25.026  INFO com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-06-12 12:05:25.027  INFO com.netflix.discovery.DiscoveryClient    : Shutting down DiscoveryClient ...
+2025-06-12 12:05:28.034  INFO com.netflix.discovery.DiscoveryClient    : Unregistering ...
+2025-06-12 12:05:28.039  INFO c.n.d.s.t.d.RedirectingEurekaHttpClient  : Request execution error. endpoint=DefaultEndpoint{ serviceUrl='http://localhost:8761/eureka/} exception=I/O error on DELETE request for "http://localhost:8761/eureka/apps/STOCK-SERVICE/LTIN600853.cts.com:stock-service:8090": Connect to http://localhost:8761 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information stacktrace=org.springframework.web.client.ResourceAccessException: I/O error on DELETE request for "http://localhost:8761/eureka/apps/STOCK-SERVICE/LTIN600853.cts.com:stock-service:8090": Connect to http://localhost:8761 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:926)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:906)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:841)
+	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:702)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateEurekaHttpClient.cancel(RestTemplateEurekaHttpClient.java:100)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$2.execute(EurekaHttpClientDecorator.java:74)
+	at com.netflix.discovery.shared.transport.decorator.RedirectingEurekaHttpClient.execute(RedirectingEurekaHttpClient.java:91)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$2.execute(EurekaHttpClientDecorator.java:74)
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:120)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$2.execute(EurekaHttpClientDecorator.java:74)
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
+	at com.netflix.discovery.DiscoveryClient.unregister(DiscoveryClient.java:919)
+	at com.netflix.discovery.DiscoveryClient.shutdown(DiscoveryClient.java:900)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMethod.invoke(InitDestroyAnnotationBeanPostProcessor.java:457)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeDestroyMethods(InitDestroyAnnotationBeanPostProcessor.java:415)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeDestruction(InitDestroyAnnotationBeanPostProcessor.java:239)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:202)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.run(DisposableBeanAdapter.java:195)
+	at org.springframework.cloud.context.scope.GenericScope$BeanLifecycleWrapper.destroy(GenericScope.java:387)
+	at org.springframework.cloud.context.scope.GenericScope.destroy(GenericScope.java:134)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:211)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroyBean(DefaultSingletonBeanRegistry.java:798)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingleton(DefaultSingletonBeanRegistry.java:748)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingleton(DefaultListableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingletons(DefaultSingletonBeanRegistry.java:707)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingletons(DefaultListableBeanFactory.java:1467)
+	at org.springframework.context.support.AbstractApplicationContext.destroyBeans(AbstractApplicationContext.java:1219)
+	at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1180)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.doClose(ServletWebServerApplicationContext.java:179)
+	at org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1126)
+	at org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:147)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:116)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.apache.hc.client5.http.HttpHostConnectException: Connect to http://localhost:8761 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:216)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:490)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:164)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:174)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:144)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:150)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:113)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:110)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:183)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:87)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:55)
+	at org.apache.hc.client5.http.classic.HttpClient.executeOpen(HttpClient.java:183)
+	at org.springframework.http.client.HttpComponentsClientHttpRequest.executeInternal(HttpComponentsClientHttpRequest.java:99)
+	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:71)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:81)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:117)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateTransportClientFactory.lambda$restTemplate$2(RestTemplateTransportClientFactory.java:145)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:88)
+	at org.springframework.http.client.InterceptingClientHttpRequest.executeInternal(InterceptingClientHttpRequest.java:72)
+	at org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:81)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:900)
+	... 37 more
+
+2025-06-12 12:05:28.102  WARN c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: I/O error on DELETE request for "http://localhost:8761/eureka/apps/STOCK-SERVICE/LTIN600853.cts.com:stock-service:8090": Connect to http://localhost:8761 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+2025-06-12 12:05:28.113  INFO c.n.d.s.t.d.RedirectingEurekaHttpClient  : Request execution error. endpoint=DefaultEndpoint{ serviceUrl='http://localhost:8761/eureka/}, exception=I/O error on DELETE request for "http://localhost:8761/eureka/apps/STOCK-SERVICE/LTIN600853.cts.com:stock-service:8090": Connect to http://localhost:8761 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information stacktrace=org.springframework.web.client.ResourceAccessException: I/O error on DELETE request for "http://localhost:8761/eureka/apps/STOCK-SERVICE/LTIN600853.cts.com:stock-service:8090": Connect to http://localhost:8761 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:926)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:906)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:841)
+	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:702)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateEurekaHttpClient.cancel(RestTemplateEurekaHttpClient.java:100)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$2.execute(EurekaHttpClientDecorator.java:74)
+	at com.netflix.discovery.shared.transport.decorator.RedirectingEurekaHttpClient.executeOnNewServer(RedirectingEurekaHttpClient.java:121)
+	at com.netflix.discovery.shared.transport.decorator.RedirectingEurekaHttpClient.execute(RedirectingEurekaHttpClient.java:80)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$2.execute(EurekaHttpClientDecorator.java:74)
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:120)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$2.execute(EurekaHttpClientDecorator.java:74)
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
+	at com.netflix.discovery.DiscoveryClient.unregister(DiscoveryClient.java:919)
+	at com.netflix.discovery.DiscoveryClient.shutdown(DiscoveryClient.java:900)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMethod.invoke(InitDestroyAnnotationBeanPostProcessor.java:457)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeDestroyMethods(InitDestroyAnnotationBeanPostProcessor.java:415)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeDestruction(InitDestroyAnnotationBeanPostProcessor.java:239)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:202)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.run(DisposableBeanAdapter.java:195)
+	at org.springframework.cloud.context.scope.GenericScope$BeanLifecycleWrapper.destroy(GenericScope.java:387)
+	at org.springframework.cloud.context.scope.GenericScope.destroy(GenericScope.java:134)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:211)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroyBean(DefaultSingletonBeanRegistry.java:798)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingleton(DefaultSingletonBeanRegistry.java:748)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingleton(DefaultListableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingletons(DefaultSingletonBeanRegistry.java:707)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingletons(DefaultListableBeanFactory.java:1467)
+	at org.springframework.context.support.AbstractApplicationContext.destroyBeans(AbstractApplicationContext.java:1219)
+	at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1180)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.doClose(ServletWebServerApplicationContext.java:179)
+	at org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1126)
+	at org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:147)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:116)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.apache.hc.client5.http.HttpHostConnectException: Connect to http://localhost:8761 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:216)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:490)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:164)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:174)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:144)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:150)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:113)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:110)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:183)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:87)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:55)
+	at org.apache.hc.client5.http.classic.HttpClient.executeOpen(HttpClient.java:183)
+	at org.springframework.http.client.HttpComponentsClientHttpRequest.executeInternal(HttpComponentsClientHttpRequest.java:99)
+	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:71)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:81)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:117)
+	at org.springframework.cloud.netflix.eureka.http.RestTemplateTransportClientFactory.lambda$restTemplate$2(RestTemplateTransportClientFactory.java:145)
+	at org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:88)
+	at org.springframework.http.client.InterceptingClientHttpRequest.executeInternal(InterceptingClientHttpRequest.java:72)
+	at org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:81)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:900)
+	... 38 more
+
+2025-06-12 12:05:28.113  WARN c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: I/O error on DELETE request for "http://localhost:8761/eureka/apps/STOCK-SERVICE/LTIN600853.cts.com:stock-service:8090": Connect to http://localhost:8761 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+2025-06-12 12:05:28.113 ERROR com.netflix.discovery.DiscoveryClient    : DiscoveryClient_STOCK-SERVICE/LTIN600853.cts.com:stock-service:8090 - de-registration failedCannot execute request on any known server
+com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$2.execute(EurekaHttpClientDecorator.java:74)
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76)
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.cancel(EurekaHttpClientDecorator.java:71)
+	at com.netflix.discovery.DiscoveryClient.unregister(DiscoveryClient.java:919)
+	at com.netflix.discovery.DiscoveryClient.shutdown(DiscoveryClient.java:900)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMethod.invoke(InitDestroyAnnotationBeanPostProcessor.java:457)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeDestroyMethods(InitDestroyAnnotationBeanPostProcessor.java:415)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeDestruction(InitDestroyAnnotationBeanPostProcessor.java:239)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:202)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.run(DisposableBeanAdapter.java:195)
+	at org.springframework.cloud.context.scope.GenericScope$BeanLifecycleWrapper.destroy(GenericScope.java:387)
+	at org.springframework.cloud.context.scope.GenericScope.destroy(GenericScope.java:134)
+	at org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:211)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroyBean(DefaultSingletonBeanRegistry.java:798)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingleton(DefaultSingletonBeanRegistry.java:748)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingleton(DefaultListableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroySingletons(DefaultSingletonBeanRegistry.java:707)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.destroySingletons(DefaultListableBeanFactory.java:1467)
+	at org.springframework.context.support.AbstractApplicationContext.destroyBeans(AbstractApplicationContext.java:1219)
+	at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1180)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.doClose(ServletWebServerApplicationContext.java:179)
+	at org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1126)
+	at org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:147)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:116)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2025-06-12 12:05:28.116  INFO com.netflix.discovery.DiscoveryClient    : Completed shut down of DiscoveryClient
