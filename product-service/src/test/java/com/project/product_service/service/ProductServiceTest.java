@@ -1,5 +1,6 @@
 package com.project.product_service.service;
 
+import com.project.product_service.dto.ProductRequestDto;
 import com.project.product_service.dto.ProductResponseDto;
 import com.project.product_service.dto.StockDto;
 import com.project.product_service.exception.ProductNotFoundException;
@@ -7,34 +8,32 @@ import com.project.product_service.feignclient.StockClient;
 import com.project.product_service.model.Product;
 import com.project.product_service.repository.ProductRepository;
 import feign.FeignException;
+import feign.Request;
+import feign.RequestTemplate;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-/**
- * Unit tests for the ProductServiceImpl.
- * Uses Mockito to mock dependencies (ProductRepository, StockClient)
- * to test the service layer logic in isolation.
- *
- * This test does not interact with a real database or external services,
- * making it independent of the datasource and Feign client URLs in application.properties.
- */
 @ExtendWith(MockitoExtension.class)
-public class ProductServiceTest {
+class ProductServiceImplTest {
 
     @Mock
     private ProductRepository productRepository;
@@ -43,313 +42,548 @@ public class ProductServiceTest {
     private StockClient stockClient;
 
     @InjectMocks
-    private ProductServiceImpl productService; // Injecting the implementation to test its specific methods
+    private ProductServiceImpl productService;
 
-    private Product sampleProduct;
-    private StockDto sampleStockDto;
+    private Product product1;
+    private Product product2;
+    private ProductRequestDto productRequestDto;
+    private StockDto stockDto1;
+    private StockDto stockDto2;
 
     @BeforeEach
     void setUp() {
-        sampleProduct = new Product(1L, "Laptop", "Powerful laptop", 1200.0, "/images/laptop.jpg");
-        sampleStockDto = new StockDto(1L, 10, 2, false);
+        // Reset mocks before each test to ensure isolation
+        reset(productRepository, stockClient);
+
+        product1 = Product.builder()
+                .id(1L)
+                .name("Laptop")
+                .description("Powerful laptop")
+                .price(1200.00) // Reverted to double
+                .imageUrl("laptop.jpg")
+                .build();
+
+        product2 = Product.builder()
+                .id(2L)
+                .name("Mouse")
+                .description("Wireless mouse")
+                .price(25.00) // Reverted to double
+                .imageUrl("mouse.jpg")
+                .build();
+
+        productRequestDto = ProductRequestDto.builder()
+                .name("Keyboard")
+                .description("Mechanical keyboard")
+                .price(75.00) // Reverted to double
+                .imageUrl("keyboard.jpg")
+                .initialStockQuantity(50)
+                .reorderLevel(10)
+                .build();
+
+        stockDto1 = StockDto.builder()
+                .productId(1L)
+                .quantity(100)
+                .reorderLevel(20)
+                .lowStock(false)
+                .build();
+
+        stockDto2 = StockDto.builder()
+                .productId(2L)
+                .quantity(5) // Low stock
+                .reorderLevel(10)
+                .lowStock(true)
+                .build();
     }
 
-    // --- createProduct Tests ---
     @Test
-    void createProduct_shouldSaveProductSuccessfully() {
-        when(productRepository.save(any(Product.class))).thenReturn(sampleProduct);
+    @DisplayName("Should create a product and add initial stock successfully")
+    void createProduct_Success() {
+        // Mock productRepository.save to return the saved product with an ID
+        when(productRepository.save(any(Product.class))).thenReturn(product1);
 
-        Product createdProduct = productService.createProduct(new Product(null, "New Product", "Desc", 100.0, "/images/new.jpg"));
+        // Call the service method
+        Product createdProduct = productService.createProduct(productRequestDto);
 
-        assertThat(createdProduct).isNotNull();
-        assertThat(createdProduct.getName()).isEqualTo("Laptop"); // Mocked to return sampleProduct
-        verify(productRepository, times(1)).save(any(Product.class));
+        // Verify productRepository.save was called with the correct product details
+        ArgumentCaptor<Product> productCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productRepository).save(productCaptor.capture());
+        Product capturedProduct = productCaptor.getValue();
+        assertEquals(productRequestDto.getName(), capturedProduct.getName());
+        assertEquals(productRequestDto.getDescription(), capturedProduct.getDescription());
+        assertEquals(productRequestDto.getPrice(), capturedProduct.getPrice());
+        assertEquals(productRequestDto.getImageUrl(), capturedProduct.getImageUrl());
+
+        // Verify stockClient.addStock was called with the correct stock details
+        ArgumentCaptor<StockDto> stockCaptor = ArgumentCaptor.forClass(StockDto.class);
+        verify(stockClient).addStock(stockCaptor.capture());
+        StockDto capturedStock = stockCaptor.getValue();
+        assertEquals(product1.getId(), capturedStock.getProductId());
+        assertEquals(productRequestDto.getInitialStockQuantity(), capturedStock.getQuantity());
+        assertEquals(productRequestDto.getReorderLevel(), capturedStock.getReorderLevel());
+
+        // Assert the returned product
+        assertNotNull(createdProduct);
+        assertEquals(product1.getId(), createdProduct.getId());
     }
 
     @Test
-    void createProduct_shouldThrowRuntimeException_whenRepositoryFails() {
+    @DisplayName("Should create a product without initial stock if quantity is null")
+    void createProduct_NoInitialStock() {
+        productRequestDto.setInitialStockQuantity(null); // No initial stock provided
+        productRequestDto.setReorderLevel(null); // No reorder level provided
+
+        when(productRepository.save(any(Product.class))).thenReturn(product1);
+
+        Product createdProduct = productService.createProduct(productRequestDto);
+
+        verify(productRepository).save(any(Product.class));
+        verify(stockClient, never()).addStock(any(StockDto.class)); // Ensure stockClient.addStock is NOT called
+
+        assertNotNull(createdProduct);
+        assertEquals(product1.getId(), createdProduct.getId());
+    }
+
+    @Test
+    @DisplayName("Should handle StockClient.addStock Conflict (409) gracefully during product creation")
+    void createProduct_AddStockConflict() {
+        when(productRepository.save(any(Product.class))).thenReturn(product1);
+        // Simulate a 409 Conflict when adding stock
+        doThrow(new FeignException.Conflict("Conflict", Request.create(Request.HttpMethod.POST, "", new HashMap<>(), null, Charset.defaultCharset(), new RequestTemplate()), null, new HashMap<>()))
+                .when(stockClient).addStock(any(StockDto.class));
+
+        Product createdProduct = productService.createProduct(productRequestDto);
+
+        verify(productRepository).save(any(Product.class));
+        verify(stockClient).addStock(any(StockDto.class)); // Still called, but throws exception
+
+        assertNotNull(createdProduct); // Product should still be created
+        assertEquals(product1.getId(), createdProduct.getId());
+    }
+
+    @Test
+    @DisplayName("Should handle generic exception during StockClient.addStock gracefully during product creation")
+    void createProduct_AddStockGenericError() {
+        when(productRepository.save(any(Product.class))).thenReturn(product1);
+        // Simulate a generic exception when adding stock
+        doThrow(new RuntimeException("Stock service error")).when(stockClient).addStock(any(StockDto.class));
+
+        Product createdProduct = productService.createProduct(productRequestDto);
+
+        verify(productRepository).save(any(Product.class));
+        verify(stockClient).addStock(any(StockDto.class)); // Still called, but throws exception
+
+        assertNotNull(createdProduct); // Product should still be created
+        assertEquals(product1.getId(), createdProduct.getId());
+    }
+
+    @Test
+    @DisplayName("Should throw RuntimeException if product saving fails")
+    void createProduct_RepositoryFailure() {
         when(productRepository.save(any(Product.class))).thenThrow(new RuntimeException("DB error"));
 
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            productService.createProduct(new Product(null, "New Product", "Desc", 100.0, "/images/new.jpg"));
-        });
-
-        assertThat(thrown.getMessage()).contains("Failed to create product");
-        verify(productRepository, times(1)).save(any(Product.class));
+        assertThrows(RuntimeException.class, () -> productService.createProduct(productRequestDto));
+        verify(productRepository).save(any(Product.class));
+        verify(stockClient, never()).addStock(any(StockDto.class)); // Stock not added if product save fails
     }
 
-    // --- getAllProducts Tests (from ProductService interface) ---
     @Test
-    void getAllProducts_shouldReturnAllProducts() {
-        List<Product> products = Arrays.asList(sampleProduct, new Product(2L, "Mouse", "Gaming mouse", 50.0, "/images/mouse.jpg"));
+    @DisplayName("Should return all products successfully")
+    void getAllProducts_Success() {
+        List<Product> products = Arrays.asList(product1, product2);
         when(productRepository.findAll()).thenReturn(products);
 
         List<Product> result = productService.getAllProducts();
 
-        assertThat(result).hasSize(2);
-        assertThat(result).containsExactlyInAnyOrderElementsOf(products);
-        verify(productRepository, times(1)).findAll();
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.contains(product1));
+        assertTrue(result.contains(product2));
+        verify(productRepository).findAll();
     }
 
     @Test
-    void getAllProducts_shouldReturnEmptyList_whenNoProductsExist() {
-        when(productRepository.findAll()).thenReturn(Collections.emptyList());
+    @DisplayName("Should throw RuntimeException if fetching all products fails")
+    void getAllProducts_RepositoryFailure() {
+        when(productRepository.findAll()).thenThrow(new RuntimeException("DB error"));
 
-        List<Product> result = productService.getAllProducts();
-
-        assertThat(result).isEmpty();
-        verify(productRepository, times(1)).findAll();
+        assertThrows(RuntimeException.class, () -> productService.getAllProducts());
+        verify(productRepository).findAll();
     }
 
     @Test
-    void getAllProducts_shouldThrowRuntimeException_whenRepositoryFails() {
-        when(productRepository.findAll()).thenThrow(new RuntimeException("DB connection error"));
+    @DisplayName("Should return all products with stock information successfully")
+    void getAllProductsWithStock_Success() {
+        List<Product> products = Arrays.asList(product1, product2);
+        when(productRepository.findAll()).thenReturn(products);
+        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(stockDto1));
+        when(stockClient.getStockByProductId(2L)).thenReturn(Optional.of(stockDto2));
 
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> productService.getAllProducts());
+        List<ProductResponseDto> result = productService.getAllProductsWithStock();
 
-        assertThat(thrown.getMessage()).contains("Failed to fetch products from database");
-        verify(productRepository, times(1)).findAll();
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        ProductResponseDto response1 = result.get(0);
+        assertEquals(product1.getId(), response1.getId());
+        assertEquals("In Stock", response1.getStockStatus());
+        assertEquals(stockDto1, response1.getStockDetails());
+
+        ProductResponseDto response2 = result.get(1);
+        assertEquals(product2.getId(), response2.getId());
+        assertEquals("Low Stock", response2.getStockStatus()); // quantity 5, reorder 10 -> low stock
+        assertEquals(stockDto2, response2.getStockDetails());
+
+        verify(productRepository).findAll();
+        verify(stockClient, times(2)).getStockByProductId(anyLong());
     }
 
-    // --- getProductById Tests (from ProductService interface) ---
     @Test
-    void getProductById_shouldReturnProduct_whenFound() {
-        when(productRepository.findById(1L)).thenReturn(Optional.of(sampleProduct));
+    @DisplayName("Should handle no stock record found for some products when getting all products with stock")
+    void getAllProductsWithStock_NoStockRecord() {
+        List<Product> products = Arrays.asList(product1, product2);
+        when(productRepository.findAll()).thenReturn(products);
+        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(stockDto1));
+        // Simulate no stock record for product2
+        when(stockClient.getStockByProductId(2L)).thenReturn(Optional.empty());
 
-        Optional<Product> foundProduct = productService.getProductById(1L);
+        List<ProductResponseDto> result = productService.getAllProductsWithStock();
 
-        assertThat(foundProduct).isPresent();
-        assertThat(foundProduct.get()).isEqualTo(sampleProduct);
-        verify(productRepository, times(1)).findById(1L);
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        ProductResponseDto response1 = result.get(0);
+        assertEquals(product1.getId(), response1.getId());
+        assertEquals("In Stock", response1.getStockStatus());
+        assertEquals(stockDto1, response1.getStockDetails());
+
+        ProductResponseDto response2 = result.get(1);
+        assertEquals(product2.getId(), response2.getId());
+        assertEquals("No Stock Record", response2.getStockStatus()); // Verify status when no stock record
+        assertNull(response2.getStockDetails()); // No stock details
+
+        verify(productRepository).findAll();
+        verify(stockClient, times(2)).getStockByProductId(anyLong());
     }
 
     @Test
-    void getProductById_shouldThrowProductNotFoundException_whenNotFound() {
-        when(productRepository.findById(99L)).thenReturn(Optional.empty());
+    @DisplayName("Should handle StockClient FeignException.NotFound when getting all products with stock")
+    void getAllProductsWithStock_FeignNotFound() {
+        List<Product> products = Arrays.asList(product1, product2);
+        when(productRepository.findAll()).thenReturn(products);
+        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(stockDto1));
+        // Simulate FeignException.NotFound for product2
+        doThrow(new FeignException.NotFound("Not Found", Request.create(Request.HttpMethod.GET, "", new HashMap<>(), null, Charset.defaultCharset(), new RequestTemplate()), null, new HashMap<>()))
+                .when(stockClient).getStockByProductId(2L);
+
+        List<ProductResponseDto> result = productService.getAllProductsWithStock();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        ProductResponseDto response1 = result.get(0);
+        assertEquals(product1.getId(), response1.getId());
+        assertEquals("In Stock", response1.getStockStatus());
+        assertEquals(stockDto1, response1.getStockDetails());
+
+        ProductResponseDto response2 = result.get(1);
+        assertEquals(product2.getId(), response2.getId());
+        assertEquals("No Stock Record", response2.getStockStatus()); // Verify status for Feign Not Found
+        assertNull(response2.getStockDetails());
+
+        verify(productRepository).findAll();
+        verify(stockClient, times(2)).getStockByProductId(anyLong());
+    }
+
+    @Test
+    @DisplayName("Should handle generic exception from StockClient when getting all products with stock")
+    void getAllProductsWithStock_StockClientError() {
+        List<Product> products = Arrays.asList(product1, product2);
+        when(productRepository.findAll()).thenReturn(products);
+        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(stockDto1));
+        // Simulate generic exception for product2
+        doThrow(new RuntimeException("Connection refused")).when(stockClient).getStockByProductId(2L);
+
+        List<ProductResponseDto> result = productService.getAllProductsWithStock();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+
+        ProductResponseDto response1 = result.get(0);
+        assertEquals(product1.getId(), response1.getId());
+        assertEquals("In Stock", response1.getStockStatus());
+        assertEquals(stockDto1, response1.getStockDetails());
+
+        ProductResponseDto response2 = result.get(1);
+        assertEquals(product2.getId(), response2.getId());
+        assertEquals("Stock Service Error", response2.getStockStatus()); // Verify status for generic error
+        assertNull(response2.getStockDetails());
+
+        verify(productRepository).findAll();
+        verify(stockClient, times(2)).getStockByProductId(anyLong());
+    }
+
+    @Test
+    @DisplayName("Should return product by ID successfully")
+    void getProductById_Success() {
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product1));
+
+        Optional<Product> result = productService.getProductById(1L);
+
+        assertTrue(result.isPresent());
+        assertEquals(product1, result.get());
+        verify(productRepository).findById(1L);
+    }
+
+    @Test
+    @DisplayName("Should throw ProductNotFoundException if product by ID is not found")
+    void getProductById_NotFound() {
+        when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ProductNotFoundException.class, () -> productService.getProductById(99L));
-        verify(productRepository, times(1)).findById(99L);
+        verify(productRepository).findById(99L);
     }
 
     @Test
-    void getProductById_shouldThrowRuntimeException_whenRepositoryFails() {
-        when(productRepository.findById(1L)).thenThrow(new RuntimeException("DB error"));
+    @DisplayName("Should throw RuntimeException if product by ID fetching fails")
+    void getProductById_RepositoryFailure() {
+        when(productRepository.findById(anyLong())).thenThrow(new RuntimeException("DB error"));
 
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> productService.getProductById(1L));
-
-        assertThat(thrown.getMessage()).contains("Failed to fetch product from database");
-        verify(productRepository, times(1)).findById(1L);
-    }
-
-    // --- updateProduct Tests ---
-    @Test
-    void updateProduct_shouldUpdateProductSuccessfully() {
-        Product updatedProduct = new Product(1L, "Updated Laptop", "Better specs", 1300.0, "/images/updated_laptop.jpg");
-        when(productRepository.existsById(1L)).thenReturn(true);
-        when(productRepository.save(any(Product.class))).thenReturn(updatedProduct);
-
-        Optional<Product> result = productService.updateProduct(1L, updatedProduct);
-
-        assertThat(result).isPresent();
-        assertThat(result.get().getName()).isEqualTo("Updated Laptop");
-        verify(productRepository, times(1)).existsById(1L);
-        verify(productRepository, times(1)).save(any(Product.class));
+        assertThrows(RuntimeException.class, () -> productService.getProductById(1L));
+        verify(productRepository).findById(1L);
     }
 
     @Test
-    void updateProduct_shouldThrowProductNotFoundException_whenProductDoesNotExist() {
-        Product updatedProduct = new Product(99L, "NonExistent", "Desc", 10.0, "/images/nonexistent.jpg");
-        when(productRepository.existsById(99L)).thenReturn(false);
-
-        assertThrows(ProductNotFoundException.class, () -> productService.updateProduct(99L, updatedProduct));
-
-        verify(productRepository, times(1)).existsById(99L);
-        verify(productRepository, never()).save(any(Product.class));
-    }
-
-    @Test
-    void updateProduct_shouldThrowRuntimeException_whenRepositoryFails() {
-        Product updatedProduct = new Product(1L, "Updated Laptop", "Better specs", 1300.0, "/images/updated_laptop.jpg");
-        when(productRepository.existsById(1L)).thenReturn(true);
-        when(productRepository.save(any(Product.class))).thenThrow(new RuntimeException("DB update error"));
-
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> productService.updateProduct(1L, updatedProduct));
-
-        assertThat(thrown.getMessage()).contains("Failed to update product");
-        verify(productRepository, times(1)).existsById(1L);
-        verify(productRepository, times(1)).save(any(Product.class));
-    }
-
-    // --- deleteProduct Tests ---
-    @Test
-    void deleteProduct_shouldDeleteProductSuccessfully() {
-        when(productRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(productRepository).deleteById(1L);
-
-        assertDoesNotThrow(() -> productService.deleteProduct(1L));
-
-        verify(productRepository, times(1)).existsById(1L);
-        verify(productRepository, times(1)).deleteById(1L);
-    }
-
-    @Test
-    void deleteProduct_shouldThrowProductNotFoundException_whenProductDoesNotExist() {
-        when(productRepository.existsById(99L)).thenReturn(false);
-
-        assertThrows(ProductNotFoundException.class, () -> productService.deleteProduct(99L));
-
-        verify(productRepository, times(1)).existsById(99L);
-        verify(productRepository, never()).deleteById(anyLong());
-    }
-
-    @Test
-    void deleteProduct_shouldThrowRuntimeException_whenRepositoryFails() {
-        when(productRepository.existsById(1L)).thenReturn(true);
-        doThrow(new RuntimeException("DB deletion error")).when(productRepository).deleteById(1L);
-
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> productService.deleteProduct(1L));
-
-        assertThat(thrown.getMessage()).contains("Failed to delete product");
-        verify(productRepository, times(1)).existsById(1L);
-        verify(productRepository, times(1)).deleteById(1L);
-    }
-
-    // --- getAllProductsWithStock Tests (specific to ProductServiceImpl) ---
-    @Test
-    void getAllProductsWithStock_shouldReturnEnrichedProducts_whenStockAvailable() {
-        Product product2 = new Product(2L, "Keyboard", "Mechanical", 80.0, "/images/keyboard.jpg");
-        List<Product> products = Arrays.asList(sampleProduct, product2);
-        StockDto stock2 = new StockDto(2L, 5, 1, true); // Low stock
-
-        when(productRepository.findAll()).thenReturn(products);
-        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(sampleStockDto));
-        when(stockClient.getStockByProductId(2L)).thenReturn(Optional.of(stock2));
-
-        List<ProductResponseDto> result = productService.getAllProductsWithStock();
-
-        assertThat(result).hasSize(2);
-        assertThat(result.get(0).getId()).isEqualTo(1L);
-        assertThat(result.get(0).getStockDetails()).isEqualTo(sampleStockDto);
-        assertThat(result.get(0).getStockStatus()).isEqualTo("In Stock"); // Based on sampleStockDto quantity 10, reorder 2, lowStock false
-
-        assertThat(result.get(1).getId()).isEqualTo(2L);
-        assertThat(result.get(1).getStockDetails()).isEqualTo(stock2);
-        assertThat(result.get(1).getStockStatus()).isEqualTo("Low Stock"); // Based on stock2 lowStock true
-
-        verify(productRepository, times(1)).findAll();
-        verify(stockClient, times(1)).getStockByProductId(1L);
-        verify(stockClient, times(1)).getStockByProductId(2L);
-    }
-
-    @Test
-    void getAllProductsWithStock_shouldHandleMissingStockInfo() {
-        Product product2 = new Product(2L, "Keyboard", "Mechanical", 80.0, "/images/keyboard.jpg");
-        List<Product> products = Arrays.asList(sampleProduct, product2);
-
-        when(productRepository.findAll()).thenReturn(products);
-        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(sampleStockDto));
-        when(stockClient.getStockByProductId(2L)).thenReturn(Optional.empty()); // Stock not found for product 2
-
-        List<ProductResponseDto> result = productService.getAllProductsWithStock();
-
-        assertThat(result).hasSize(2);
-        assertThat(result.get(0).getId()).isEqualTo(1L);
-        assertThat(result.get(0).getStockDetails()).isEqualTo(sampleStockDto);
-        assertThat(result.get(0).getStockStatus()).isEqualTo("In Stock");
-
-        assertThat(result.get(1).getId()).isEqualTo(2L);
-        assertThat(result.get(1).getStockDetails()).isNull(); // Stock details should be null
-        assertThat(result.get(1).getStockStatus()).isEqualTo("Stock Info Unavailable"); // Default status
-
-        verify(productRepository, times(1)).findAll();
-        verify(stockClient, times(1)).getStockByProductId(1L);
-        verify(stockClient, times(1)).getStockByProductId(2L);
-    }
-
-    @Test
-    void getAllProductsWithStock_shouldHandleStockServiceError() {
-        Product product2 = new Product(2L, "Keyboard", "Mechanical", 80.0, "/images/keyboard.jpg");
-        List<Product> products = Arrays.asList(sampleProduct, product2);
-
-        when(productRepository.findAll()).thenReturn(products);
-        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(sampleStockDto));
-        // Simulate Feign client throwing an exception for product 2 (e.g., service down)
-        when(stockClient.getStockByProductId(2L)).thenThrow(mock(FeignException.class));
-
-        List<ProductResponseDto> result = productService.getAllProductsWithStock();
-
-        assertThat(result).hasSize(2);
-        assertThat(result.get(0).getId()).isEqualTo(1L);
-        assertThat(result.get(0).getStockDetails()).isEqualTo(sampleStockDto);
-        assertThat(result.get(0).getStockStatus()).isEqualTo("In Stock");
-
-        assertThat(result.get(1).getId()).isEqualTo(2L);
-        assertThat(result.get(1).getStockDetails()).isNull(); // Stock details should be null
-        assertThat(result.get(1).getStockStatus()).isEqualTo("Stock Service Error"); // Error status
-
-        verify(productRepository, times(1)).findAll();
-        verify(stockClient, times(1)).getStockByProductId(1L);
-        verify(stockClient, times(1)).getStockByProductId(2L);
-    }
-
-    // --- getProductByIdWithStock Tests (specific to ProductServiceImpl) ---
-    @Test
-    void getProductByIdWithStock_shouldReturnEnrichedProduct_whenStockAvailable() {
-        when(productRepository.findById(1L)).thenReturn(Optional.of(sampleProduct));
-        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(sampleStockDto));
+    @DisplayName("Should return product by ID with stock information successfully")
+    void getProductByIdWithStock_Success() {
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product1));
+        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(stockDto1));
 
         ProductResponseDto result = productService.getProductByIdWithStock(1L);
 
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getName()).isEqualTo("Laptop");
-        assertThat(result.getStockDetails()).isEqualTo(sampleStockDto);
-        assertThat(result.getStockStatus()).isEqualTo("In Stock");
-
-        verify(productRepository, times(1)).findById(1L);
-        verify(stockClient, times(1)).getStockByProductId(1L);
+        assertNotNull(result);
+        assertEquals(product1.getId(), result.getId());
+        assertEquals("In Stock", result.getStockStatus());
+        assertEquals(stockDto1, result.getStockDetails());
+        verify(productRepository).findById(1L);
+        verify(stockClient).getStockByProductId(1L);
     }
 
     @Test
-    void getProductByIdWithStock_shouldThrowProductNotFoundException_whenProductNotFound() {
-        when(productRepository.findById(99L)).thenReturn(Optional.empty());
+    @DisplayName("Should throw ProductNotFoundException if product by ID not found when getting with stock")
+    void getProductByIdWithStock_ProductNotFound() {
+        when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ProductNotFoundException.class, () -> productService.getProductByIdWithStock(99L));
-
-        verify(productRepository, times(1)).findById(99L);
-        verify(stockClient, never()).getStockByProductId(anyLong()); // Should not call stock service
+        verify(productRepository).findById(99L);
+        verify(stockClient, never()).getStockByProductId(anyLong()); // Stock client not called if product not found
     }
 
     @Test
-    void getProductByIdWithStock_shouldHandleMissingStockInfo() {
-        when(productRepository.findById(1L)).thenReturn(Optional.of(sampleProduct));
-        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.empty()); // Stock not found
+    @DisplayName("Should update an existing product and its stock successfully (quantity and reorder level provided)")
+    void updateProduct_SuccessWithStockUpdate() {
+        ProductRequestDto updateRequestDto = ProductRequestDto.builder()
+                .name("Laptop Pro")
+                .description("Updated powerful laptop")
+                .price(1500.00) // Reverted to double
+                .imageUrl("laptop_pro.jpg")
+                .initialStockQuantity(90) // Updated quantity
+                .reorderLevel(15) // Updated reorder level
+                .build();
 
-        ProductResponseDto result = productService.getProductByIdWithStock(1L);
+        // Simulate existing product
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product1));
+        // Simulate saving the updated product
+        when(productRepository.save(any(Product.class))).thenReturn(product1);
+        // Simulate stock update success
+        when(stockClient.updateStock(anyLong(), any(StockDto.class))).thenReturn(new StockDto());
 
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getStockDetails()).isNull();
-        assertThat(result.getStockStatus()).isEqualTo("Stock Info Unavailable");
+        Product updatedProduct = productService.updateProduct(1L, updateRequestDto);
 
-        verify(productRepository, times(1)).findById(1L);
-        verify(stockClient, times(1)).getStockByProductId(1L);
+        // Verify productRepository.findById and save
+        verify(productRepository).findById(1L);
+        ArgumentCaptor<Product> productCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productRepository).save(productCaptor.capture());
+        Product capturedProduct = productCaptor.getValue();
+        assertEquals(updateRequestDto.getName(), capturedProduct.getName());
+        assertEquals(updateRequestDto.getDescription(), capturedProduct.getDescription());
+        assertEquals(updateRequestDto.getPrice(), capturedProduct.getPrice());
+        assertEquals(updateRequestDto.getImageUrl(), capturedProduct.getImageUrl());
+
+        // Verify stockClient.updateStock
+        ArgumentCaptor<StockDto> stockCaptor = ArgumentCaptor.forClass(StockDto.class);
+        verify(stockClient).updateStock(eq(1L), stockCaptor.capture());
+        StockDto capturedStock = stockCaptor.getValue();
+        assertEquals(updateRequestDto.getInitialStockQuantity(), capturedStock.getQuantity());
+        assertEquals(updateRequestDto.getReorderLevel(), capturedStock.getReorderLevel());
+        assertEquals(1L, capturedStock.getProductId()); // Ensure product ID is correctly set
+
+        assertNotNull(updatedProduct);
+        assertEquals(product1.getId(), updatedProduct.getId());
     }
 
     @Test
-    void getProductByIdWithStock_shouldHandleStockServiceError() {
-        when(productRepository.findById(1L)).thenReturn(Optional.of(sampleProduct));
-        when(stockClient.getStockByProductId(1L)).thenThrow(mock(FeignException.class)); // Simulate Feign error
+    @DisplayName("Should update product details only if stock quantity/reorder level are null")
+    void updateProduct_NoStockUpdate() {
+        ProductRequestDto updateRequestDto = ProductRequestDto.builder()
+                .name("Laptop Pro Max")
+                .description("Newest laptop")
+                .price(1800.00) // Reverted to double
+                .imageUrl("laptop_pro_max.jpg")
+                .initialStockQuantity(null) // No quantity update
+                .reorderLevel(null)         // No reorder level update
+                .build();
 
-        ProductResponseDto result = productService.getProductByIdWithStock(1L);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product1));
+        when(productRepository.save(any(Product.class))).thenReturn(product1);
 
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getStockDetails()).isNull();
-        assertThat(result.getStockStatus()).isEqualTo("Stock Service Error");
+        Product updatedProduct = productService.updateProduct(1L, updateRequestDto);
 
-        verify(productRepository, times(1)).findById(1L);
-        verify(stockClient, times(1)).getStockByProductId(1L);
+        verify(productRepository).findById(1L);
+        verify(productRepository).save(any(Product.class));
+        verify(stockClient, never()).updateStock(anyLong(), any(StockDto.class)); // Stock update should not be called
+        verify(stockClient, never()).addStock(any(StockDto.class)); // Stock add should not be called
+
+        assertNotNull(updatedProduct);
+        assertEquals(product1.getId(), updatedProduct.getId());
+    }
+
+    @Test
+    @DisplayName("Should update product and create stock if stock record not found during update")
+    void updateProduct_CreateStockIfNotFound() {
+        ProductRequestDto updateRequestDto = ProductRequestDto.builder()
+                .name("Laptop Pro")
+                .description("Updated powerful laptop")
+                .price(1500.00) // Reverted to double
+                .imageUrl("laptop_pro.jpg")
+                .initialStockQuantity(90)
+                .reorderLevel(15)
+                .build();
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product1));
+        when(productRepository.save(any(Product.class))).thenReturn(product1);
+        // Simulate 404 (Not Found) for updateStock, leading to addStock
+        doThrow(new FeignException.NotFound("Not Found", Request.create(Request.HttpMethod.PUT, "", new HashMap<>(), null, Charset.defaultCharset(), new RequestTemplate()), null, new HashMap<>()))
+                .when(stockClient).updateStock(eq(1L), any(StockDto.class));
+        when(stockClient.addStock(any(StockDto.class))).thenReturn(new StockDto());
+
+        Product updatedProduct = productService.updateProduct(1L, updateRequestDto);
+
+        verify(productRepository).findById(1L);
+        verify(productRepository).save(any(Product.class));
+        verify(stockClient).updateStock(eq(1L), any(StockDto.class)); // update was attempted
+        verify(stockClient).addStock(any(StockDto.class)); // add was called after 404
+
+        assertNotNull(updatedProduct);
+    }
+
+
+
+    @Test
+    @DisplayName("Should throw ProductNotFoundException if product to update is not found")
+    void updateProduct_NotFound() {
+        when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(ProductNotFoundException.class, () -> productService.updateProduct(99L, productRequestDto));
+        verify(productRepository).findById(99L);
+        verify(productRepository, never()).save(any(Product.class));
+        verify(stockClient, never()).updateStock(anyLong(), any(StockDto.class));
+        verify(stockClient, never()).addStock(any(StockDto.class));
+    }
+
+    @Test
+    @DisplayName("Should handle generic exception during product update save gracefully")
+    void updateProduct_RepositorySaveFailure() {
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product1));
+        when(productRepository.save(any(Product.class))).thenThrow(new RuntimeException("DB error"));
+
+        assertThrows(RuntimeException.class, () -> productService.updateProduct(1L, productRequestDto));
+        verify(productRepository).findById(1L);
+        verify(productRepository).save(any(Product.class));
+        verify(stockClient, never()).updateStock(anyLong(), any(StockDto.class)); // Stock not updated if product save fails
+    }
+
+    @Test
+    @DisplayName("Should delete a product and its corresponding stock successfully")
+    void deleteProduct_Success() {
+        when(productRepository.existsById(1L)).thenReturn(true);
+        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(stockDto1)); // Simulate stock exists
+
+        productService.deleteProduct(1L);
+
+        verify(productRepository).existsById(1L);
+        verify(productRepository).deleteById(1L);
+        verify(stockClient).getStockByProductId(1L); // Verify stock existence check
+        verify(stockClient).deleteStock(1L); // Verify stock deletion
+    }
+
+    @Test
+    @DisplayName("Should delete a product even if no stock record exists for it")
+    void deleteProduct_NoStockToDelete() {
+        when(productRepository.existsById(1L)).thenReturn(true);
+        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.empty()); // Simulate no stock exists
+
+        productService.deleteProduct(1L);
+
+        verify(productRepository).existsById(1L);
+        verify(productRepository).deleteById(1L);
+        verify(stockClient).getStockByProductId(1L);
+        verify(stockClient, never()).deleteStock(anyLong()); // Stock deletion should NOT be called
+    }
+
+    @Test
+    @DisplayName("Should delete a product even if stock deletion fails with FeignException.NotFound")
+    void deleteProduct_StockDeletionFeignNotFound() {
+        when(productRepository.existsById(1L)).thenReturn(true);
+        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(stockDto1)); // Simulate stock exists
+        // Simulate 404 (Not Found) for deleteStock
+        doThrow(new FeignException.NotFound("Not Found", Request.create(Request.HttpMethod.DELETE, "", new HashMap<>(), null, Charset.defaultCharset(), new RequestTemplate()), null, new HashMap<>()))
+                .when(stockClient).deleteStock(1L);
+
+        productService.deleteProduct(1L);
+
+        verify(productRepository).existsById(1L);
+        verify(productRepository).deleteById(1L);
+        verify(stockClient).getStockByProductId(1L);
+        verify(stockClient).deleteStock(1L); // Deletion attempted, exception is caught
+    }
+
+    @Test
+    @DisplayName("Should delete a product even if stock deletion fails with a generic exception")
+    void deleteProduct_StockDeletionGenericError() {
+        when(productRepository.existsById(1L)).thenReturn(true);
+        when(stockClient.getStockByProductId(1L)).thenReturn(Optional.of(stockDto1)); // Simulate stock exists
+        doThrow(new RuntimeException("Stock service unreachable"))
+                .when(stockClient).deleteStock(1L);
+
+        productService.deleteProduct(1L);
+
+        verify(productRepository).existsById(1L);
+        verify(productRepository).deleteById(1L);
+        verify(stockClient).getStockByProductId(1L);
+        verify(stockClient).deleteStock(1L); // Deletion attempted, exception is caught
+    }
+
+    @Test
+    @DisplayName("Should throw ProductNotFoundException if product to delete is not found")
+    void deleteProduct_NotFound() {
+        when(productRepository.existsById(anyLong())).thenReturn(false);
+
+        assertThrows(ProductNotFoundException.class, () -> productService.deleteProduct(99L));
+        verify(productRepository).existsById(99L);
+        verify(productRepository, never()).deleteById(anyLong());
+        verify(stockClient, never()).getStockByProductId(anyLong());
+        verify(stockClient, never()).deleteStock(anyLong());
+    }
+
+    @Test
+    @DisplayName("Should throw RuntimeException if product deletion fails")
+    void deleteProduct_RepositoryFailure() {
+        when(productRepository.existsById(1L)).thenReturn(true);
+        doThrow(new RuntimeException("DB error")).when(productRepository).deleteById(1L);
+
+        assertThrows(RuntimeException.class, () -> productService.deleteProduct(1L));
+        verify(productRepository).existsById(1L);
+        verify(productRepository).deleteById(1L);
+        verify(stockClient, never()).getStockByProductId(anyLong()); // Stock not touched if product delete fails
     }
 }
-

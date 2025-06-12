@@ -9,8 +9,8 @@ import java.util.Optional;
 // This client will be used by product-service to SEND data to stock-service
 @FeignClient(name = "stock-service", url = "${stock-service.url:http://localhost:8090}")
 public interface StockClient {
-        @GetMapping("/api/stocks/{productId}")
-        Optional<StockDto> getStockByProductId(@PathVariable("productId") Long productId);
+    @GetMapping("/api/stocks/{productId}")
+    Optional<StockDto> getStockByProductId(@PathVariable("productId") Long productId);
 
     @PostMapping("/api/stocks")
     StockDto addStock(@RequestBody StockDto stockDto);
